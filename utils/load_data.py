@@ -1,7 +1,6 @@
 import os
 import cv2
 
-
 class LoadDataset:        
     def __getitem__(self, index):
         if index >= len(self.img_list):
