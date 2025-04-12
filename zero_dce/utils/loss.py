@@ -3,12 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.vgg import vgg16
 
-class L_color(nn.Module):
+class ColourConstancyLoss(nn.Module):
     def forward(self, x):
         mr, mg, mb = torch.split(torch.mean(x, [2, 3], keepdim=True), 1, dim=1)
         return torch.sqrt((mr - mg)**2 + (mr - mb)**2 + (mb - mg)**2)
 
-class L_spa(nn.Module):
+class SpacialConstancyLoss(nn.Module):
     def __init__(self):
         super().__init__()
         self.pool = nn.AvgPool2d(4)
@@ -26,7 +26,7 @@ class L_spa(nn.Module):
                 for w in [self.weight_left, self.weight_right, self.weight_up, self.weight_down])
         return E
 
-class L_exp(nn.Module):
+class ExposureLoss(nn.Module):
     def __init__(self, patch_size, mean_val):
         super().__init__()
         self.pool = nn.AvgPool2d(patch_size)
@@ -36,7 +36,7 @@ class L_exp(nn.Module):
         mean = self.pool(torch.mean(x, 1, keepdim=True))
         return torch.mean((mean - self.mean_val)**2)
 
-class L_TV(nn.Module):
+class TotalVariationLoss(nn.Module):
     def __init__(self, weight=1):
         super().__init__()
         self.weight = weight
@@ -46,14 +46,8 @@ class L_TV(nn.Module):
         w_tv = torch.sum((x[:, :, :, 1:] - x[:, :, :, :-1])**2)
         return self.weight * 2 * (h_tv / (x.size(2)-1) / x.size(3) + w_tv / x.size(2) / (x.size(3)-1)) / x.size(0)
 
-class Sa_Loss(nn.Module):
+class SaturationLoss(nn.Module):
     def forward(self, x):
         r, g, b = torch.split(x, 1, dim=1)
         mr, mg, mb = torch.split(torch.mean(x, [2, 3], keepdim=True), 1, dim=1)
         return torch.mean(torch.sqrt((r - mr)**2 + (g - mg)**2 + (b - mb)**2))
-
-class perception_loss(nn.Module):
-    def __init__(self):
-        super().__init__()
-        features = vgg16(pretrained=True).features
-        self.to_relu_4_3_
