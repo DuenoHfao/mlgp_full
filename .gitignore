@@ -141,6 +141,7 @@ venv.bak/
 
 # Data
 data/
+zero_dce/result/
 
 # Spyder project settings
 .spyderproject
