@@ -1,0 +1,61 @@
+# Dataset paths and general settings
+dataset:
+  train: ./data/train_data
+  val: ./data/val_data
+  test: ./data/test_data
+  annotations: ./data/yolo_annotation  # Custom field for your own use
+
+# Model configuration
+model:
+  path: ./snapshots/yolov8n.pt     # Path to pretrained YOLOv8 model
+  arch: yolov8n                    # Architecture name for reference
+
+# Training hyperparameters (all valid YOLOv8 params)
+training:
+  epochs: 100
+  patience: 20                     # Early stopping patience
+  batch: 16
+  imgsz: 640
+  save: True
+  save_period: 1                  # -1 = save only last and best
+  cache: True
+  device: ''                      # '' = auto, or e.g. '0,1'
+  workers: 8
+  project: runs/train
+  name: yolov8_exp
+  exist_ok: True
+
+  # Optimization
+  optimizer: Adam                 # SGD, Adam, AdamW
+  lr0: 0.001                      # Initial learning rate
+  lrf: 0.01                       # Final learning rate multiplier
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  box: 7.5
+  cls: 0.5
+  dfl: 1.5
+
+  # Data augmentation
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.0
+  copy_paste: 0.0
+
+  # Other
+  dropout: 0.0
+  rect: False
+  resume: False
+  amp: True
+  val: True
