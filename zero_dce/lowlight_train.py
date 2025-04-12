@@ -4,7 +4,15 @@ import os
 import argparse
 from utils import dataloader
 from utils import loss
+from utils import train_test
 import model
+
+src_path='./data/img_dataset'
+train_path='./data/train_data'
+val_path='./data/val_data'
+test_path='./data/test_data'
+split_ratio=[0.7, 0.2, 0.1]
+seed=69420
 
 def weights_init(m):
     if isinstance(m, torch.nn.Conv2d) or isinstance(m, torch.nn.BatchNorm2d):
@@ -20,13 +28,15 @@ def train(config):
         net.load_state_dict(torch.load(config.pretrain_dir))
 
     train_dataset = []
-    for file_name in os.listdir(config.lowlight_images_path):
-        file_path = os.path.join(config.lowlight_images_path, file_name)
-        try:
-            train_dataset.append(dataloader.lowlight(file_path))
-        except RuntimeError:
-            print(f"Error loading image {file_path}. Skipping.")
-            continue
+    for root, dirs, file_names in os.walk(config.lowlight_images_path):
+        for file_name in file_names:
+            file_path = os.path.join(root, file_name)
+            try:
+                train_dataset.append(dataloader.lowlight(file_path))
+
+            except RuntimeError:
+                print(f"Error loading image {file_path}. Skipping.")
+                continue
     
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size,
                                                shuffle=True, num_workers=config.num_workers, pin_memory=True)
@@ -57,18 +67,25 @@ def train(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lowlight_images_path', type=str, default="data/train_data/")
+    print(os.listdir("./data/train_data"))
+
+    
+
+    train_test.generate_train_val_test(src_path, train_path, val_path, test_path, split_ratio, seed=seed)
+    
+    parser.add_argument('--lowlight_images_path', type=str, default=train_path)
     parser.add_argument('--lr', type=float, default=0.0001)
     parser.add_argument('--weight_decay', type=float, default=0.0001)
     parser.add_argument('--grad_clip_norm', type=float, default=0.1)
     parser.add_argument('--num_epochs', type=int, default=200)
-    parser.add_argument('--train_batch_size', type=int, default=8)
+    parser.add_argument('--patience', type=int, default=10)
+    parser.add_argument('--train_batch_size', type=int, default=20)
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--display_iter', type=int, default=10)
     parser.add_argument('--snapshot_iter', type=int, default=10)
-    parser.add_argument('--snapshots_folder', type=str, default="snapshots/")
-    parser.add_argument('--load_pretrain', type=bool, default=False)
-    parser.add_argument('--pretrain_dir', type=str, default="snapshots/Epoch99.pth")
+    parser.add_argument('--snapshots_folder', type=str, default="./zero_dce/snapshots")
+    parser.add_argument('--load_pretrain', type=bool, default=True)
+    parser.add_argument('--pretrain_dir', type=str, default="./zero_dce/snapshots/Epoch99.pth")
     config = parser.parse_args()
 
     os.makedirs(config.snapshots_folder, exist_ok=True)

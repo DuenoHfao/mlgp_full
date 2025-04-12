@@ -55,6 +55,6 @@ The results are compared across different preprocessing methods:
 This project demonstrates the impact of various preprocessing techniques on YOLOv8's performance. The results provide insights into which methods are most effective for enhancing object detection accuracy.
 
 ## References
-- [Zero-DCE Paper](https://arxiv.org/abs/2008.00980)
-- [Retinex Theory](https://en.wikipedia.org/wiki/Retinex)
-- [YOLOv8 Documentation](https://docs.ultralytics.com/)
+- [Zero-DCE Paper](https://arxiv.org/pdf/2001.06826)
+- [Retinex Theory](https://en.wikipedia.org/wiki/Color_constancy#Retinex_theory)
+- [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/#overview)

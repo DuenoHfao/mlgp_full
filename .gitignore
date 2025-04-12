@@ -6,12 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
-<<<<<<< HEAD
-=======
 # Dataset
 static/
 
->>>>>>> a629c3bc207a380fad599c0793ebf6e1b486a15c
 # Distribution / packaging
 .Python
 build/
@@ -144,7 +141,6 @@ venv.bak/
 
 # Data
 data/
-
 
 # Spyder project settings
 .spyderproject
