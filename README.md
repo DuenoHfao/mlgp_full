@@ -57,4 +57,5 @@ This project demonstrates the impact of various preprocessing techniques on YOLO
 ## References
 - [Zero-DCE Paper](https://arxiv.org/pdf/2001.06826)
 - [Retinex Theory](https://en.wikipedia.org/wiki/Color_constancy#Retinex_theory)
+    - [Night color image enhancement via statisticallaw and retinex](https://www.sciencedirect.com/science/article/abs/pii/B9780128020456000168)
 - [YOLOv8 Documentation](https://docs.ultralytics.com/models/yolov8/#overview)

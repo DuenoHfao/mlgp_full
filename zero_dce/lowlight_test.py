@@ -27,7 +27,7 @@ def lowlight(image_path):
             _, enhanced, _ = net(img)
     
     except RuntimeError as e:
-        formatted_time = strftime("%a, %d %b %Y %H:%M:%S +0000", localtime())
+        formatted_time = strftime("%a, %d %b %Y %H:%M:%S", localtime(time.time()))
         logger.error(f"{formatted_time}: Error processing image {image_path}: {e}")
         print(f"Error processing image {image_path}")
         return
