@@ -1,0 +1,75 @@
+import torch
+import torch.optim
+import os
+import argparse
+from utils import dataloader
+from utils import loss
+import model
+
+def weights_init(m):
+    if isinstance(m, torch.nn.Conv2d) or isinstance(m, torch.nn.BatchNorm2d):
+        torch.nn.init.normal_(m.weight.data, 0.0, 0.02)
+        if hasattr(m, 'bias') and m.bias is not None:
+            torch.nn.init.constant_(m.bias.data, 0)
+
+def train(config):
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    net = model.enhance_net_nopool().cuda()
+    net.apply(weights_init)
+    if config.load_pretrain:
+        net.load_state_dict(torch.load(config.pretrain_dir))
+
+    train_dataset = []
+    for file_name in os.listdir(config.lowlight_images_path):
+        file_path = os.path.join(config.lowlight_images_path, file_name)
+        try:
+            train_dataset.append(dataloader.lowlight(file_path))
+        except RuntimeError:
+            print(f"Error loading image {file_path}. Skipping.")
+            continue
+    
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size,
+                                               shuffle=True, num_workers=config.num_workers, pin_memory=True)
+
+    L_color, L_spa, L_exp, L_TV = loss.L_color(), loss.L_spa(), loss.L_exp(16, 0.6), loss.L_TV()
+    optimizer = torch.optim.Adam(net.parameters(), lr=config.lr, weight_decay=config.weight_decay)
+
+    net.train()
+    for epoch in range(config.num_epochs):
+        for i, img in enumerate(train_loader):
+            img = img.cuda()
+            enhanced_1, enhanced, A = net(img)
+            loss_total = (
+                200 * L_TV(A) +
+                torch.mean(L_spa(enhanced, img)) +
+                5 * torch.mean(L_color(enhanced)) +
+                10 * torch.mean(L_exp(enhanced))
+            )
+            optimizer.zero_grad()
+            loss_total.backward()
+            torch.nn.utils.clip_grad_norm_(net.parameters(), config.grad_clip_norm)
+            optimizer.step()
+
+            if (i + 1) % config.display_iter == 0:
+                print(f"Epoch {epoch}, Iter {i+1}: Loss = {loss_total.item():.4f}")
+            if (i + 1) % config.snapshot_iter == 0:
+                torch.save(net.state_dict(), os.path.join(config.snapshots_folder, f"Epoch{epoch}.pth"))
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--lowlight_images_path', type=str, default="data/train_data/")
+    parser.add_argument('--lr', type=float, default=0.0001)
+    parser.add_argument('--weight_decay', type=float, default=0.0001)
+    parser.add_argument('--grad_clip_norm', type=float, default=0.1)
+    parser.add_argument('--num_epochs', type=int, default=200)
+    parser.add_argument('--train_batch_size', type=int, default=8)
+    parser.add_argument('--num_workers', type=int, default=4)
+    parser.add_argument('--display_iter', type=int, default=10)
+    parser.add_argument('--snapshot_iter', type=int, default=10)
+    parser.add_argument('--snapshots_folder', type=str, default="snapshots/")
+    parser.add_argument('--load_pretrain', type=bool, default=False)
+    parser.add_argument('--pretrain_dir', type=str, default="snapshots/Epoch99.pth")
+    config = parser.parse_args()
+
+    os.makedirs(config.snapshots_folder, exist_ok=True)
+    train(config)
