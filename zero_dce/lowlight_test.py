@@ -41,7 +41,7 @@ def lowlight(image_path):
 
 if __name__ == '__main__':
     logger = logging.getLogger(__name__)
-    logging.basicConfig(filename='./zero_dce/image_test.log', level=logging.ERROR)
+    logging.basicConfig(filename='./log_files/zero_dce-test.log', level=logging.ERROR)
     test_dir = test_path
     os.makedirs(test_dir, exist_ok=True)
 
