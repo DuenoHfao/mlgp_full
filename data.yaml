@@ -1,0 +1,17 @@
+names:
+- People
+- Motorbike
+- Cup
+- Bicycle
+- Chair
+- Boat
+- Table
+- Car
+- Bottle
+- Bus
+- Cat
+- Dog
+nc: 12
+path: ./
+train: ./data/train_data
+val: ./data/val_data
