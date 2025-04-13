@@ -1,17 +1,17 @@
 names:
-- People
-- Motorbike
-- Cup
 - Bicycle
-- Chair
 - Boat
-- Table
-- Car
 - Bottle
 - Bus
+- Car
 - Cat
+- Chair
+- Cup
 - Dog
+- Motorbike
+- People
+- Table
 nc: 12
-path: C:\Users\Admin\Documents\MLGP\mlgp_full\data
-train: train_val\images\train
-val: train_val\images\val
+path: ./
+train: ./train_val/images/train
+val: ./train_val/images/val
