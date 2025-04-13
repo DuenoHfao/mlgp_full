@@ -2,7 +2,7 @@ import os, shutil
 import re
 import random
 
-def generate_train_val_test(src_path, train_path, val_path, test_path, split_ratio, seed=69420):
+def generate_train_val_test(src_path, train_path, val_path, test_path, split_ratio, seed=None):
     if not os.path.exists(train_path):
         os.makedirs(train_path, exist_ok=True)
     if not os.path.exists(val_path):
@@ -19,8 +19,10 @@ def generate_train_val_test(src_path, train_path, val_path, test_path, split_rat
     if os.listdir(test_path) != []:
         shutil.rmtree(test_path)
         print(f"Removed existing test path: {test_path}")
+    
+    if seed != None:
+        random.seed(seed)
 
-    random.seed(seed)
     total_files = 0
     file_lists = []
     for (root, dirs, file_names) in os.walk(src_path):
@@ -52,9 +54,9 @@ def generate_train_val_test(src_path, train_path, val_path, test_path, split_rat
 if __name__ == "__main__":
     generate_train_val_test(
         src_path='data/img_dataset',
-        train_path='data/train_data',
-        val_path='data/val_data',
-        test_path='data/test_data',
+        train_path='data/train_val/images/train',
+        val_path='data/train_val/images/val',
+        test_path='data/test_data/images/test',
         split_ratio=[0.7, 0.2, 0.1],
         seed=69420
     )
