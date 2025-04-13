@@ -12,6 +12,6 @@ names:
 - Cat
 - Dog
 nc: 12
-path: /home/yc-family/Documents/code/mlgp
-train: ./data/train_val/images/train
-val: ./data/train_val/images/val
+path: ./mlgp_full/data
+train: train_val/images/train
+val: train_val/images/val
