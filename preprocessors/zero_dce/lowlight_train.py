@@ -6,10 +6,10 @@ import argparse
 import time
 from time import strftime, localtime
 
-from utils import dataloader
-from utils import loss
-from utils import generate_train_test
-import model
+from preprocessors.zero_dce.utils import dataloader
+from preprocessors.zero_dce.utils import loss
+from preprocessors.zero_dce.utils import generate_train_test
+import preprocessors.zero_dce.model as model
 
 src_path='./data/img_dataset'
 train_path='./data/train_data'

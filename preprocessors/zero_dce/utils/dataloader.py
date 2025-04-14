@@ -6,8 +6,8 @@ import glob
 import time
 import numpy as np
 from PIL import Image
-from utils import dataloader
-import model
+from preprocessors.zero_dce.utils import dataloader
+import preprocessors.zero_dce.model
 
 
 def lowlight(image_path):

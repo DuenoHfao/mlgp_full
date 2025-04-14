@@ -7,21 +7,20 @@ import logging
 
 import numpy as np
 from PIL import Image
-import model
-from lowlight_train import test_path
+from preprocessors.zero_dce.model import enhance_net_nopool
+from preprocessors.zero_dce.lowlight_train import test_path
 
 
 
-def lowlight(image_path):
+def lowlight(image_path, save_file=True, save_path=None):
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-    BASE_RESULT_DIR = './zero_dce/result'
 
     img = Image.open(image_path).convert('RGB')
     try:
         img = torch.from_numpy(np.asarray(img) / 255.0).float().permute(2, 0, 1).cuda().unsqueeze(0)
     
-        net = model.enhance_net_nopool().cuda()
-        net.load_state_dict(torch.load('./zero_dce/snapshots/Epoch99.pth'))
+        net = enhance_net_nopool().cuda()
+        net.load_state_dict(torch.load('./preprocessors/zero_dce/snapshots/Epoch99.pth'))
         net.eval()
         with torch.no_grad():
             _, enhanced, _ = net(img)
@@ -32,12 +31,19 @@ def lowlight(image_path):
         print(f"Error processing image {image_path}")
         return
     
+    if not save_file:
+        return enhanced
+    
+    if save_path == None:
+        raise ValueError("save_path is empty. Please provide a valid path.")
+    
     dir_name = os.path.dirname(image_path.replace('\\', '/')).split('/')[-1]
-    result_folder_path = os.path.join(BASE_RESULT_DIR, dir_name)
+    result_folder_path = os.path.join(save_path, dir_name)
     result_path = os.path.join(result_folder_path, os.path.basename(image_path))
-    os.makedirs(os.path.dirname(result_path), exist_ok=True)
+    os.makedirs(result_folder_path, exist_ok=True)
     torchvision.utils.save_image(enhanced, result_path)
     print(f"{result_path}") # Saved enhanced image to {result_path}
+
 
 if __name__ == '__main__':
     logger = logging.getLogger(__name__)
