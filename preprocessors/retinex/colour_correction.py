@@ -13,7 +13,7 @@ def get_gaussian_blur(img, ksize=0, sigma=5):
 def single_scale_retinex(img, sigma=5):
     img = img.astype(np.float32) + 1.0
     blur = get_gaussian_blur(img, sigma=sigma)
-    retinex = np.log10(img) - np.log10(blur + 1.0)
+    retinex = np.log1p(img) - np.log1p(blur + 1.0)
     return retinex
 
 def msr(img, sigma_scales=[15, 81, 251]):
@@ -61,7 +61,7 @@ def msrcp(img, sigma_scales=[15, 80, 250], low_per=1, high_per=1):
     return msrcp.astype(np.uint8)
 
 if __name__ == "__main__":
-    img_path = r'C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data\train_val\images\train\Bicycle\2015_00001.png'
+    img_path = r'C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data\img_dataset\Car\2015_03014.png'
     img = cv2.imread(img_path)
     msrcp_img = msrcp(img, sigma_scales=[15, 80, 250], low_per=1, high_per=1)
     cv2.imshow('MSRCP', msrcp_img)
