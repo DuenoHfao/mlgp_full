@@ -61,8 +61,10 @@ def msrcp(img, sigma_scales=[15, 80, 250], low_per=1, high_per=1):
     return msrcp.astype(np.uint8)
 
 if __name__ == "__main__":
-    img_path = r'C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data\img_dataset\Car\2015_03014.png'
+    img_path = r'C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data\img_dataset\Bicycle\2015_00001.png'
     img = cv2.imread(img_path)
-    msrcp_img = msrcp(img, sigma_scales=[15, 80, 250], low_per=1, high_per=1)
-    cv2.imshow('MSRCP', msrcp_img)
+   # msrcp_img = msrcp(img, sigma_scales=[15, 80, 250], low_per=1, high_per=1)
+    msrcr_img = msrcr(img, sigma_scales=[15, 80, 250], alpha=125, beta=46, G=192, b=-30, low_per=1, high_per=1)
+    cv2.imshow('Original', img)
+    cv2.imshow('MSRCP', msrcr_img)
     cv2.waitKey(0)
