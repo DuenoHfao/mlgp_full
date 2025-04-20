@@ -1,0 +1,17 @@
+names:
+- Bicycle
+- Boat
+- Bottle
+- Bus
+- Car
+- Cat
+- Chair
+- Cup
+- Dog
+- Motorbike
+- People
+- Table
+nc: 12
+path: C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data
+train: msrcc_train_val/images/train
+val: msrcc_train_val/images/val

@@ -1,0 +1,17 @@
+names:
+  0: Bicycle
+  1: Boat
+  2: Bottle
+  3: Bus
+  4: Car
+  5: Cat
+  6: Chair
+  7: Cup
+  8: Dog
+  9: Motorbike
+  10: Table
+nc: 11
+path: C:\Users\DuenoHfao\Desktop\Work\SCVU\mlgp_full\data
+train: people_remove_train_val/images/train
+val: people_remove_train_val/images/val
+test: people_remove_test_data/images
